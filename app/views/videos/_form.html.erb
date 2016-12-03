@@ -1,0 +1,28 @@
+<%= form_for(video) do |f| %>
+  <% if video.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= t('video.saving_errors', count: pluralize(video.errors.count, "error")) %></h2>
+
+      <ul>
+      <% video.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.label :title, t('.video.title') %>
+  <%= f.text_field :title, disabled: !video.new_record? %>
+
+  <%= f.label :watermark, t('.video.watermark') %>
+  <%= f.text_field :watermark %>
+
+  <% if video.new_record? %>
+    <%= f.label :video_file, t('.video.video_file') %>
+    <%= f.file_field(:file, class: 'file_input') %>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -21,3 +21,13 @@
 
 en:
   hello: "Hello world"
+  video:
+    title: Title
+    watermark: Watermark
+    video_file: Video File
+    save: Save video
+    saving_errors: "%{count} prohibited this video from being saved:"
+    actions:
+      created: Video was successfully created.
+      updated: Video was successfully updated.
+      destroyed: Video was successfully destroyed.
