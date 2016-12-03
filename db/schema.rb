@@ -10,18 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161203090240) do
+ActiveRecord::Schema.define(version: 20161203123204) do
 
   create_table "videos", force: :cascade do |t|
-    t.integer  "status",       default: 0
-    t.string   "title",                    null: false
-    t.string   "watermark",                null: false
-    t.string   "filepath"
+    t.integer  "status",            default: 0
+    t.string   "title",                         null: false
+    t.string   "watermark",                     null: false
+    t.string   "original_filepath"
     t.float    "duration"
     t.integer  "filesize"
     t.string   "preview_path"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.string   "encoded_filepath"
   end
 
 end

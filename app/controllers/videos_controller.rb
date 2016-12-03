@@ -20,6 +20,9 @@ class VideosController < ApplicationController
 
     respond_to do |format|
       if @video.save
+        if uploaded_video_tempfile
+          save_uploaded_video(@video, uploaded_video_tempfile)
+        end
         format.html { redirect_to @video, notice: I18n.t("video.actions.created") }
       else
         format.html { render :new }
@@ -51,5 +54,22 @@ class VideosController < ApplicationController
 
     def video_params
       params.require(:video).permit(:title, :watermark)
+    end
+
+    def uploaded_video_tempfile
+      params[:video][:file]
+    end
+
+    def save_uploaded_video(video, tempfile)
+      filename = sanitize_filename(tempfile.original_filename)
+      filepath = video.assets_directory.join(filename).to_s
+      FileUtils.mkdir_p(File.dirname(filepath))
+      FileUtils.cp(tempfile.path, filepath)
+      video.original_filepath = filepath
+      video.save
+    end
+
+    def sanitize_filename(filename)
+      File.basename(filename.to_s).gsub(/^.*(\\|\/)/, '').gsub(/[^0-9A-ZА-Я.\-]/i, '_')
     end
 end
