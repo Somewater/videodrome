@@ -1,4 +1,8 @@
+require 'sidekiq/api'
+
 class Video < ApplicationRecord
+  RECORD_RELATED_JOBS = [EncodinJob, CreatePreviewJob].map(&:to_s)
+
   enum status: { inited: 0, uploaded: 1, previewed: 2, encoded: 3 }
 
   before_save :check_watermark,         if: :watermark_changed?
@@ -61,13 +65,25 @@ class Video < ApplicationRecord
   end
 
   def schedule_encoding_job!
-    # TODO: find and delete all EncodinJob related with this video
+    stop_related_jobs!(EncodinJob.to_s)
     self.encoded_filepath = nil
     EncodinJob.perform_later(self.id)
   end
 
   def clear_files
-    # TODO: stop all related jobs
+    stop_related_jobs!
     FileCleanerJob.perform_later(assets_directory.to_s)
+  end
+
+  def stop_related_jobs!(by_class = nil)
+    queue = Sidekiq::Queue.new()
+    queue.each do |job|
+      data = job.args.first
+      if (by_class.nil? && RECORD_RELATED_JOBS.include?(data['job_class'])) || data['job_class'] == by_class
+        if data['arguments'].first.to_i == self.id
+          job.delete
+        end
+      end
+    end
   end
 end
