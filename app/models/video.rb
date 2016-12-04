@@ -14,6 +14,16 @@ class Video < ApplicationRecord
     Rails.configuration.video_path.join(self.id.to_s)
   end
 
+  def each_encoded_filepath_with_type(&block)
+    (self.encoded_filepath || '').split(',').each do |filepath|
+      filetype = if File.extname(filepath) == '.ogv'
+                   'ogg'
+                 else
+                   File.extname(filepath)[1..-1] end
+      yield(filepath, filetype)
+    end
+  end
+
   protected
 
   def check_watermark
