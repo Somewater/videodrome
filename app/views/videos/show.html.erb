@@ -4,23 +4,36 @@
       <script src="http://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
   <% end %>
 <% end %>
-<p id="notice"><%= notice %></p>
-
 <h1>Video: <%= @video.title %></h1>
 
 <% if @video.original_filepath %>
-    <video id="video-player" class="video-js" controls preload="auto" width="640" height="360"
-           poster="<%= filepath_url @video.preview_path %>" data-setup="{}">
-      <% @video.each_encoded_filepath_with_type do |encoded_filepath, encoded_type| %>
-          <source src="<%= filepath_url encoded_filepath %>"  type="video/<%= encoded_type %>"></source>
-      <% end %>
-      <p class="vjs-no-js">
-        To view this video please enable JavaScript, and consider upgrading to a web browser that
-        <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-      </p>
-    </video>
-    <script src="http://vjs.zencdn.net/5.8.8/video.js"></script>
+  <div class="row">
+    <div class="well col-md-7">
+
+      <video id="video-player" class="video-js" controls preload="auto" width="640" height="360"
+             poster="<%= filepath_url @video.preview_path %>" data-setup="{}">
+        <% @video.each_encoded_filepath_with_type do |encoded_filepath, encoded_type| %>
+            <source src="<%= filepath_url encoded_filepath %>"  type="video/<%= encoded_type %>"></source>
+        <% end %>
+        <p class="vjs-no-js">
+          To view this video please enable JavaScript, and consider upgrading to a web browser that
+          <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+        </p>
+      </video>
+      <script src="http://vjs.zencdn.net/5.8.8/video.js"></script>
+    </div>
+</div>
 <% end %>
 
-<%= link_to 'Edit', edit_video_path(@video) %> |
-<%= link_to 'Back', videos_path %>
+<div class="btn-group">
+  <%= link_to videos_path do %>
+      <button type="button" class="btn btn-default">
+        <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span> Back
+      </button>
+  <% end %>
+  <%= link_to edit_video_path(@video) do %>
+      <button type="button" class="btn btn-default alert-success">
+        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+      </button>
+  <% end %>
+</div>

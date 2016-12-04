@@ -1,27 +1,54 @@
-<p id="notice"><%= notice %></p>
-
-<h1>Videos</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th colspan="5"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @videos.each do |video| %>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
       <tr>
-        <td><%= video.status %></td>
-        <td><img src="<%= filepath_url video.preview_path %>" width="64" height="36"></td>
-        <td><%= link_to 'Show', video %></td>
-        <td><%= link_to 'Edit', edit_video_path(video) %></td>
-        <td><%= link_to 'Destroy', video, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <th colspan="4">Videos</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @videos.each do |video| %>
+        <tr>
+          <td class="col-md-1">
+            <span class="label label-default" style="background-color: <%= video_status_color video %>">
+              <%= video.status %>
+            </span>
+          </td>
+          <td class="col-md-2"><img src="<%= filepath_url(video.preview_path).presence || '/rails.png' %>" width="64" height="36"></td>
+          <td class="col-md-7">
+            <%= link_to video do %>
+              <%= video.title %>
+            <% end %>
+            <% if video.duration %>
+              <br>
+              <%= t('video.size') %>: <span class="badge"><%= number_to_human_size(video.filesize) %></span>&nbsp;&nbsp;
+              <%= t('video.duration') %>: <span class="badge"><%= number_with_precision(video.duration, precision: 1) %> sec</span>
+            <% end %>
+          </td>
+          <td>
+            <%= link_to video do %>
+              <button type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-film" aria-hidden="true"></span>
+              </button>
+            <% end %>
+            <%= link_to edit_video_path(video) do %>
+              <button type="button" class="btn btn-default alert-success">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+              </button>
+            <% end %>
+            <%= link_to video, method: :delete, data: { confirm: 'Are you sure?' } do %>
+              <button type="button" class="btn btn-default alert-danger">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+              </button>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
-<br>
-
-<%= link_to 'New Video', new_video_path %>
+<%= link_to new_video_path do %>
+    <button type="button" class="btn btn-default btn-lg alert-success">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true">&nbsp;</span><%= t('video.new') %>
+    </button>
+<% end %>

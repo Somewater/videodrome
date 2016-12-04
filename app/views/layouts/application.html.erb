@@ -10,6 +10,22 @@
   </head>
 
   <body>
-    <%= yield %>
+    <div class="container">
+      <% unless notice.blank? %>
+          <div class="alert alert-success">
+            <a class="close" data-dismiss="alert">?</a>
+            <span><%= notice %></span>
+          </div>
+      <% end %>
+
+      <% unless alert.blank? %>
+          <div class="alert alert-danger">
+            <a class="close" data-dismiss="alert">?</a>
+            <span><%= alert %></span>
+          </div>
+      <% end %>
+
+      <%= yield %>
+    </div>
   </body>
 </html>

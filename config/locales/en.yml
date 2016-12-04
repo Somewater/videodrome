@@ -26,6 +26,9 @@ en:
     watermark: Watermark
     video_file: Video File
     save: Save video
+    new: New video
+    size: Size
+    duration: Duration
     saving_errors: "%{count} prohibited this video from being saved:"
     actions:
       created: Video was successfully created.
