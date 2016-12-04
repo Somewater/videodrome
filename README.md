@@ -3,6 +3,10 @@
 Video archive with ability to put a watermark. Uploaded video converted
 to HTML5-supported formats (MP4, WEBM and OGG) and played using HTML5 player.
 
+## Example
+
+http://videodrome.atlantor.ru/
+
 ## Getting started
 
 Videodrome requires Rails 5, Redis, ffmpeg and imagemagick.
