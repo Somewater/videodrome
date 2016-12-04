@@ -10,6 +10,7 @@ http://videodrome.atlantor.ru/
 ## Getting started
 
 Videodrome requires Rails 5, Redis, ffmpeg and imagemagick.
+Tested on Ubuntu 16.04 LTS.
 
 1. Install ruby 2.2.2+ with bundler.
 
