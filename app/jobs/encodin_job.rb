@@ -53,8 +53,13 @@ class EncodinJob < ApplicationJob
     txt.font_family = 'helvetica'
     txt.pointsize = 100
     txt.gravity = Magick::CenterGravity
-    txt.annotate(img, 0,0,0,0, text) { self.fill = 'black' }
-    txt.annotate(img, 0,0,3,3, text) { self.fill = 'white' }
+    txt.fill('black')
+    txt.opacity(0.5)
+    txt.text(0, 0, text)
+    txt.fill('white')
+    txt.opacity(0.5)
+    txt.text(3, 3, text)
+    txt.draw(img)
     img.write(output_filepath)
     output_filepath
   end
