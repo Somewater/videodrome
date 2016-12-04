@@ -1,4 +1,5 @@
 require 'ffmpeg_adapter'
+require 'rmagick'
 
 class EncodinJob < ApplicationJob
 
@@ -14,15 +15,14 @@ class EncodinJob < ApplicationJob
     encoded_filepath = find_next_encoded_filepath(video.original_filepath)
 
     FileUtils.mkdir_p(File.dirname(encoded_filepath))
-    video.encoded_filepath = encode(video.original_filepath, encoded_filepath).join(',')
+    watermark_path = create_watermark(video.watermark, video.assets_directory.join("watermark.png"))
+    video.encoded_filepath = encode(video.original_filepath, encoded_filepath, watermark_path).join(',')
     video.save
   end
 
-  def encode(from, to)
-    # TODO: add watermark
-
+  def encode(from, to, watermark)
     logfile = "#{to}.log"
-    cmd = "#{Rails.root.join('bin', 'encode2.sh')} #{from} #{to} >> #{logfile} 2>&1"
+    cmd = "#{Rails.root.join('bin', 'encode2.sh')} #{from} #{to} #{watermark} >> #{logfile} 2>&1"
     File.open("logfile", 'a'){|f| f.write("Start encoding at #{Time.new}\nCOMMAND: #{cmd}\n\n") }
     status = system(cmd)
     File.open("logfile", 'a'){|f| f.write("\n\nComplete encoding at #{Time.new}. Status: #{status}") }
@@ -44,5 +44,18 @@ class EncodinJob < ApplicationJob
       encoded_filepath = new_name.call()
     end
     encoded_filepath
+  end
+
+  # @return path to watermark image (jpg)
+  def create_watermark(text, output_filepath)
+    img = Magick::Image.new(640, 360){|c| c.background_color= "transparent" }
+    txt = Magick::Draw.new
+    txt.font_family = 'helvetica'
+    txt.pointsize = 100
+    txt.gravity = Magick::CenterGravity
+    txt.annotate(img, 0,0,0,0, text) { self.fill = 'black' }
+    txt.annotate(img, 0,0,3,3, text) { self.fill = 'white' }
+    img.write(output_filepath)
+    output_filepath
   end
 end

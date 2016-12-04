@@ -1,24 +1,41 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Video archive with ability to put a watermark. Uploaded video converted
+to HTML5-supported formats (MP4, WEBM and OGG) and played using HTML5 player.
 
-Things you may want to cover:
+## Getting started
 
-* Ruby version
+It's requires Rails 5, Redis, ffmpeg and imagemagick.
 
-* System dependencies
+1. Install ruby 2.2.2+ with bundler.
 
-* Configuration
+2. Install required system tools. For Debian/Ubuntu you can execute:
+```
+sudo apt-get install ffmpeg imagemagick libmagickcore-dev libmagickwand-dev redis-server
+sudo apt-get install ffmpeg2theora # optional, for OGG format
 
-* Database creation
+```
 
-* Database initialization
+3. Install required gems and prepare project:
+```
+# goto app directory...
+bundle install
+rake db:migrate
+```
 
-* How to run the test suite
+4. Run Rails server and Sidekiq job processor (in separated terminals):
+```
+rails s
+...
+sidekiq
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+5. Open site in browser http://localhost:3000
 
-* Deployment instructions
+## TODO list:
 
-* ...
+1. Protect original video file from downloading (store outside of public folder)
+
+2. Clear previous generated video files after watermark changes
+
+3. Add tests

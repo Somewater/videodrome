@@ -62,6 +62,7 @@ class Video < ApplicationRecord
 
   def schedule_encoding_job!
     # TODO: find and delete all EncodinJob related with this video
+    self.encoded_filepath = nil
     EncodinJob.perform_later(self.id)
   end
 
