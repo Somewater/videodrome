@@ -1,4 +1,4 @@
-require 'json'
+require 'ffmpeg_adapter'
 
 class EncodinJob < ApplicationJob
 
@@ -7,7 +7,7 @@ class EncodinJob < ApplicationJob
   def perform(video_id)
     video = Video.find(video_id)
 
-    orig_filesize, duration, orig_width, orig_height = ffprobe(video.original_filepath)
+    orig_filesize, duration, orig_width, orig_height = FFMpegAdapter.ffprobe(video.original_filepath)
     video.duration = duration
     video.filesize = orig_filesize
 
@@ -27,15 +27,6 @@ class EncodinJob < ApplicationJob
     status = system(cmd)
     File.open("logfile", 'a'){|f| f.write("\n\nComplete encoding at #{Time.new}. Status: #{status}") }
     Dir["#{to}*"].to_a.select{|fp| File.extname(fp) != '.log' }.sort_by{|fp| ENCODING_EXTENSIONS.index(File.extname(fp)) }
-  end
-
-  # return size (bytes), duration (sec), width, height
-  def ffprobe(filepath)
-    out = `ffprobe -v quiet -print_format json -show_format -show_streams #{filepath}`
-    out = JSON.parse(out)
-    format = out['format']
-    stream = out['streams'].find{|s| s['codec_type'] == 'video' }
-    [format['size'].to_i, format['duration'].to_f, stream['coded_width'].to_i, stream['coded_height'].to_i]
   end
 
   # return filepath w/o extension (like a "/app/content/video.avi" -> "/app/content/encoded")
