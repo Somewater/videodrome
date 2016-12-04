@@ -13,7 +13,11 @@
               <%= video.status %>
             </span>
           </td>
-          <td class="col-md-2"><img src="<%= filepath_url(video.preview_path).presence || '/rails.png' %>" width="64" height="36"></td>
+          <td class="col-md-2">
+            <%= link_to video do %>
+              <img src="<%= filepath_url(video.preview_path).presence || '/rails.png' %>" width="64" height="36">
+            <% end %>
+          </td>
           <td class="col-md-7">
             <%= link_to video do %>
               <%= video.title %>

@@ -16,6 +16,11 @@ class VideosController < ApplicationController
   end
 
   def create
+    unless uploaded_video_tempfile
+      flash.alert = I18n.t("video.not_uploaded")
+      redirect_to new_video_path
+      return
+    end
     @video = Video.new(video_params)
 
     respond_to do |format|

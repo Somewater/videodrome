@@ -30,6 +30,9 @@ en:
     size: Size
     duration: Duration
     saving_errors: "%{count} prohibited this video from being saved:"
+    not_encoded: Video not encoded yet
+    not_previewed: Video processing in progress
+    not_uploaded: Upload video file
     actions:
       created: Video was successfully created.
       updated: Video was successfully updated.

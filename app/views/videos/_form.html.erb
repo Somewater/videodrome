@@ -1,6 +1,6 @@
 <%= form_for(video, html: {class: 'form-horizontal'}) do |f| %>
   <% if video.errors.any? %>
-    <div id="error_explanation" class="alert alert-success">
+    <div id="error_explanation" class="alert alert-danger">
       <h2><%= t('video.saving_errors', count: pluralize(video.errors.count, "error")) %></h2>
 
       <ul>
